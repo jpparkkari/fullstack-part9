@@ -29,6 +29,8 @@ const calculateBmi = (height: number, weight: number) : Result => {
     return "Normal (healthy weight)";
   if (bmi > 25) 
     return "High (overweight)";
+  
+  return "Cannot determine. Something went wrong"
 }
 
 try {

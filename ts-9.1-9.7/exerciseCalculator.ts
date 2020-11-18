@@ -33,6 +33,8 @@ const calculateExercises = (exercises: Array<number>, target: number): TrainingR
         return 'not too bad, but could be better';
       case 3:
         return 'pretty good!';
+      default:
+        return 'cannot say. something went wrong.' 
     }
   }
 
