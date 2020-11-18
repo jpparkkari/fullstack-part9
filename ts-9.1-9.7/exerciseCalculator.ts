@@ -11,21 +11,28 @@ interface TrainingResults {
 
 const calculateExercises = (exercises: Array<number>, target: number): TrainingResults => {
 
-  const average = exercises.reduce((acc, curr) => 
-    acc+curr, 0) / exercises.length;
+  if(isNaN(target) || exercises.length===0) throw new Error('target is not a number, or there is not enough arguments');
+
+  const average = exercises.reduce(
+    (acc, curr) => {
+      if (isNaN(curr)) throw new Error('exercise hours are not numbers');
+      return acc+curr;
+    }, 0
+    ) / exercises.length;
+  
   const rating = () => {
-    if (average < 0.8 * target) return 1
-    if (average > 1.2 * target) return 3
-    else return 2
+    if (average < 0.8 * target) return 1;
+    if (average > 1.2 * target) return 3;
+    else return 2;
   }
   const ratingDescription =(rating: number) : string => {
     switch(rating) {
       case 1:
-        return 'pretty bad'
+        return 'pretty bad';
       case 2:
-        return 'not too bad, but could be better'
+        return 'not too bad, but could be better';
       case 3:
-        return 'pretty good!'
+        return 'pretty good!';
     }
   }
 
@@ -40,16 +47,13 @@ const calculateExercises = (exercises: Array<number>, target: number): TrainingR
   }
 }
 
-const trainingArray = [3, 0, 2, 4.5, 0, 3, 1];
-const target = 2;
-console.log(calculateExercises(trainingArray, target))
+const printResults = (args: Array<string>) => {
+  const [, , target, ...rest] = args;
+  console.log(calculateExercises( rest.map((a)=>Number(a)), Number(target) ));
+}
 
-/*
-{ periodLength: 7,
-  trainingDays: 5,
-  success: false,
-  rating: 2,
-  ratingDescription: 'not too bad but could be better',
-  target: 2,
-  average: 1.9285714285714286 }
-  */
+try {
+  printResults(process.argv);
+} catch (e) {
+  console.log(e.message);
+}
