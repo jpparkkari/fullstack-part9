@@ -9,7 +9,7 @@ interface TrainingResults {
   average: number
 }
 
-const calculateExercises = (exercises: Array<number>, target: number): TrainingResults => {
+export const calculateExercises = (exercises: Array<number>, target: number): TrainingResults => {
 
   if(isNaN(target) || exercises.length===0) throw new Error('target is not a number, or there is not enough arguments');
 
@@ -21,7 +21,7 @@ const calculateExercises = (exercises: Array<number>, target: number): TrainingR
     ) / exercises.length;
   
   const rating = () => {
-    if (average < 0.8 * target) return 1
+    if (average < 0.8 * target) return 1;
     if (average > 1.2 * target) return 3;
     else return 2;
   }
