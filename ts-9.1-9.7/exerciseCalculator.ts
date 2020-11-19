@@ -21,7 +21,7 @@ const calculateExercises = (exercises: Array<number>, target: number): TrainingR
     ) / exercises.length;
   
   const rating = () => {
-    if (average < 0.8 * target) return 1;
+    if (average < 0.8 * target) return 1
     if (average > 1.2 * target) return 3;
     else return 2;
   }
