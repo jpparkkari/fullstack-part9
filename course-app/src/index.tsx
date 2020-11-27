@@ -28,7 +28,12 @@ interface CoursePartThree extends CoursePartExtendedBase {
   exerciseSubmissionLink: string;
 }
 
-type CoursePart = CoursePartOne | CoursePartTwo | CoursePartThree;
+interface CoursePartOwn extends CoursePartExtendedBase {
+  name: "Own course interfaces";
+  expectedTrainingHours: number;
+}
+
+type CoursePart = CoursePartOne | CoursePartTwo | CoursePartThree | CoursePartOwn;
 
 const Header: React.FC<HeaderProps> = (props)  => {
   return <h1>{props.name}</h1>;
@@ -59,6 +64,9 @@ const Part: React.FC<{ part: CoursePart }> = ({ part }) => {
     case "Deeper type usage":
       return <p>{part.name} {part.exerciseCount} {part.description} {part.exerciseSubmissionLink} </p>
 
+    case "Own course interfaces":
+      return <p> {part.name} {part.exerciseCount} {part.description} {part.expectedTrainingHours} </p>
+  
     default:
       return assertNever(part);
   }
@@ -91,6 +99,12 @@ const App: React.FC = () => {
       exerciseCount: 14,
       description: "Confusing description",
       exerciseSubmissionLink: "https://fake-exercise-submit.made-up-url.dev"
+    },
+    {
+      name: "Own course interfaces",
+      exerciseCount: 12,
+      description: "Something you must do yourself",
+      expectedTrainingHours: 1
     }
   ];
 
