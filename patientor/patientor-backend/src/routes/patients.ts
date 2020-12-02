@@ -4,8 +4,12 @@ import toNewPatient from '../utils';
 
 const router = express.Router();
 
+router.get('/:id', (req,res) => {
+  res.send(patientService.getPatients().find(patient => patient.id === req.params.id));
+});
+
 router.get('/', (_req, res) => {
-  res.send(patientService.getNoSsnPatients());
+  res.send(patientService.getPublicPatients());
 });
 
 router.post('/', (req, res) => {
