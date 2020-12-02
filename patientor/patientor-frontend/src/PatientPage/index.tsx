@@ -5,7 +5,7 @@ import { Container, Icon } from "semantic-ui-react";
 
 import { Patient, GenderIcon } from "../types";
 import { apiBaseUrl } from "../constants";
-import { useStateValue } from "../state";
+import { setPatient, useStateValue } from "../state";
 import { useParams } from "react-router-dom";
 interface RouteParams {
   id: string;
@@ -22,7 +22,8 @@ const PatientPage: React.FC = () => {
       const { data: loadedPatient } = await axios.get<Patient>(
         `${apiBaseUrl}/patients/${params.id}`
       );
-      dispatch({ type: "SET_PATIENT", payload: loadedPatient });
+      dispatch(setPatient(loadedPatient));
+      //dispatch({ type: "SET_PATIENT", payload: loadedPatient });
     } catch (e) {
       console.error(e.response.data);
       //setError(e.response.error);
@@ -46,7 +47,6 @@ const PatientPage: React.FC = () => {
     );
   }
   else {
-    console.log("no patient");
     return (
       <div className="App">
         <h3>no patient found</h3>

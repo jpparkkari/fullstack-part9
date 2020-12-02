@@ -1,4 +1,3 @@
-import { kMaxLength } from "buffer";
 
 export interface Diagnosis {
   code: string;
@@ -15,7 +14,7 @@ export enum Gender {
 export enum GenderIcon {
   male = "mars",
   female = "venus",
-  other = "genderless"
+  other = "heart"
 }
 
 export interface Patient {
