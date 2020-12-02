@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { Container, Icon } from "semantic-ui-react";
+import { Container, Icon, List } from "semantic-ui-react";
 
 
 import { Patient, GenderIcon } from "../types";
@@ -42,6 +42,17 @@ const PatientPage: React.FC = () => {
           <h3>{patient.name} <Icon name={GenderIcon[patient.gender]} /> </h3>
           <p>ssn: {patient.ssn}</p>
           <p>occupation: {patient.occupation}</p>
+          <h4>entries</h4>
+          <div>{patient.entries.map((e, i) => (
+            <div key={i}>
+            <p key={i}>{e.date} {e.description}</p>
+            <List bulleted>
+            {e.diagnosisCodes?.map(code => (
+              <List.Item key={code}>{code}</List.Item>
+            ))}
+            </List>
+            </div>
+          ))}</div>
         </Container>
       </div>
     );
