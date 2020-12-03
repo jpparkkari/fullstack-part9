@@ -1,15 +1,70 @@
 import React from "react";
 import axios from "axios";
-import { Container, Icon, List } from "semantic-ui-react";
+import { Container, Icon, Segment } from "semantic-ui-react";
 
 
-import { Patient, GenderIcon } from "../types";
+import { Patient, Icons, Entry, HealthCheckEntry, OccupationalHealthcareEntry, HospitalEntry } from "../types";
 import { apiBaseUrl } from "../constants";
 import { setPatient, useStateValue } from "../state";
 import { useParams } from "react-router-dom";
+import HealthRatingBar from "../components/HealthRatingBar";
 interface RouteParams {
   id: string;
 }
+
+const BaseEntry: React.FC<{ entry: Entry }> = ({ entry }) => {
+  return (
+      <>
+      <h3>{entry.date} <Icon name={Icons[entry.type]} size="large" /></h3>
+      <i>{entry.description}</i>
+      </>
+  );
+};
+
+const HospitalEntryBlock: React.FC<{ entry: HospitalEntry }> = ({ entry }) => {
+  return (    
+    <Segment>
+      <BaseEntry entry={entry} />
+  {entry.discharge ? <p>Discharged on {entry.discharge.date}. Reason: {entry.discharge.criteria}</p> : null}
+    </Segment>
+  );
+};
+const OccupationalHealthcareEntryBlock: React.FC<{ entry: OccupationalHealthcareEntry }> = ({ entry }) => {
+  return (    
+    <Segment>
+      <h3>{entry.employerName}</h3>
+      <BaseEntry entry={entry} />
+      {entry.sickLeave ? <p>Given sickleave from {entry.sickLeave?.startDate} until {entry.sickLeave.endDate}</p> : null }
+    </Segment>
+  );
+};
+const HealthCheckEntryBlock: React.FC<{ entry: HealthCheckEntry }> = ({ entry }) => {
+  return (    
+    <Segment>
+      <BaseEntry entry={entry} />
+      <HealthRatingBar rating={entry.healthCheckRating} showText = {false} />
+    </Segment>
+  );
+};
+
+const assertNever = (value: never): never => {
+  throw new Error(
+    `Unhandled discriminated union member: ${JSON.stringify(value)}`
+  );
+};
+
+const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
+  switch (entry.type) {
+  case "Hospital":
+    return <HospitalEntryBlock entry={entry} />;
+  case "OccupationalHealthcare":
+    return <OccupationalHealthcareEntryBlock entry={entry} />;
+  case "HealthCheck":
+    return <HealthCheckEntryBlock entry={entry} />;
+  default:
+    return assertNever(entry);
+  }
+};
 
 const PatientPage: React.FC = () => {
   const [{ patient }, dispatch] = useStateValue();
@@ -38,18 +93,14 @@ const PatientPage: React.FC = () => {
     return (
       <div className="App">
         <Container textAlign="left">
-          <h3>{patient.name} <Icon name={GenderIcon[patient.gender]} /> </h3>
+          <h3>{patient.name} <Icon name={Icons[patient.gender]} /> </h3>
           <p>ssn: {patient.ssn}</p>
           <p>occupation: {patient.occupation}</p>
           <h4>entries</h4>
           <div>{patient.entries.map((e, i) => (
             <div key={i}>
-            <p key={i}>{e.date} <i>{e.description}</i></p>
-            <List bulleted>
-            {e.diagnosisCodes?.map(code => (
-              <List.Item key={code}>{code} {diagnoses[code].name} </List.Item>
-            ))}
-            </List>
+            <EntryDetails entry={e} />
+            
             </div>
           ))}</div>
         </Container>
