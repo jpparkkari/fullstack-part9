@@ -13,7 +13,7 @@ interface RouteParams {
 
 const PatientPage: React.FC = () => {
   const [{ patient }, dispatch] = useStateValue();
-
+  const [{ diagnoses }, ] = useStateValue(); 
   const params = useParams<RouteParams>();
 
 
@@ -33,9 +33,8 @@ const PatientPage: React.FC = () => {
     getPatient();
   }
 
-
   //the page first renders previous state of patient. Could not figure if that can be prevented.
-  if (patient) {
+  if (patient && Object.values(diagnoses).length > 0 ) {
     return (
       <div className="App">
         <Container textAlign="left">
@@ -45,10 +44,10 @@ const PatientPage: React.FC = () => {
           <h4>entries</h4>
           <div>{patient.entries.map((e, i) => (
             <div key={i}>
-            <p key={i}>{e.date} {e.description}</p>
+            <p key={i}>{e.date} <i>{e.description}</i></p>
             <List bulleted>
             {e.diagnosisCodes?.map(code => (
-              <List.Item key={code}>{code}</List.Item>
+              <List.Item key={code}>{code} {diagnoses[code].name} </List.Item>
             ))}
             </List>
             </div>
