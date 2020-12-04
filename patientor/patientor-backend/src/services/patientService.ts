@@ -1,5 +1,5 @@
 import patients from '../../data/patients';
-import { Patient, PublicPatient, NewPatient } from '../types';
+import { Patient, PublicPatient, NewPatient, NewHealthCheckEntry, NewHospitalEntry, NewOccupationalHealthcareEntry } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 
 const getPatients = (): Array<Patient> => {
@@ -22,28 +22,22 @@ const addPatient = ( patient: NewPatient ): Patient => {
     id: uuidv4(),
     ...patient
   };
-/*
 
-  name: string, dateOfBirth: string, ssn: string, gender: string, occupation: string
-): Patient => {
-  const newPatient = {
-   
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    id: 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      uuidv4(),
-    name,
-    dateOfBirth,
-    ssn,
-    gender,
-    occupation
-  };*/
   patients.push(newPatient);
   return newPatient;
+};
+
+const addPatientEntry = (pid: Patient['id'], entry: NewHealthCheckEntry | NewOccupationalHealthcareEntry  | NewHospitalEntry ): Patient | undefined => {
+  const patient = patients.find( p => p.id === pid);
+  const newEntry = {...entry, id:uuidv4() };
+  patient?.entries.push(newEntry);
+
+  return patient;
 };
 
 export default {
   getPatients,
   getPublicPatients,
-  addPatient
+  addPatient,
+  addPatientEntry
 };
