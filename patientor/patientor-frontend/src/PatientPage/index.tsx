@@ -8,7 +8,7 @@ import { apiBaseUrl } from "../constants";
 import { addEntry, setPatient, useStateValue } from "../state";
 import { useParams } from "react-router-dom";
 import HealthRatingBar from "../components/HealthRatingBar";
-import { EntryFormValues } from "../AddEntryModal/AddEntryForm";
+// import { EntryFormValues } from "../AddEntryModal/AddEntryForm";
 interface RouteParams {
   id: string;
 }
@@ -75,6 +75,7 @@ const PatientPage: React.FC = () => {
 
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
+  const [type, setType] = React.useState<Entry['type']>('Hospital');
 
   const openModal = (): void => setModalOpen(true);
 
@@ -83,11 +84,9 @@ const PatientPage: React.FC = () => {
     setError(undefined);
   };
 
-  const submitNewEntry = async (values: EntryFormValues) => {
+  const submitNewEntry = async (values: unknown) => {
  
-    if (!values.discharge?.date && !values.discharge?.criteria) {
-      delete values.discharge;
-    }
+
     try {
       const { data: newEntry } = await axios.post<Entry>(
         `${apiBaseUrl}/patients/${params.id}/entries`,
@@ -140,8 +139,11 @@ const PatientPage: React.FC = () => {
         onSubmit={submitNewEntry}
         error={error}
         onClose={closeModal}
+        type = {type}
       />
-      <Button onClick={() => openModal()}>Add New Entry</Button>
+      <Button onClick={() => {setType("Hospital"); openModal();} }>Add New Hospital Entry</Button>
+      <Button onClick={() => {setType("OccupationalHealthcare"); openModal();} }>Add New Occupational Entry</Button>
+      <Button onClick={() => {setType("HealthCheck"); openModal();} }>NOT WORKING Add New Health Check Entry</Button>
       </div>
     );
   }

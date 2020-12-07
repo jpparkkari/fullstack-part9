@@ -3,7 +3,7 @@ import { Grid, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 import { useStateValue } from "../state";
 import { TextField, DiagnosisSelection } from "../AddPatientModal/FormField";
-import { HospitalEntry } from "../types";
+import { Entry, HospitalEntry } from "../types";
 
 /*
  * use type Patient, but omit id and entries,
@@ -14,22 +14,92 @@ export type EntryFormValues = Omit<HospitalEntry, "id" >;
 
 
 interface Props {
-  onSubmit: (values: EntryFormValues) => void;
+  onSubmit: (values: unknown) => void;
   onCancel: () => void;
+  type: Entry["type"];
 }
 
-export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
+const HospitalEntryValues = () => (
+  <>
+      <Field 
+          label="Discharge Date"
+          placeholder="YYYY-MM-DD"
+          name="discharge.date"
+          component={TextField}
+      />
+      <Field 
+          label="Discharge Criteria"
+          placeholder="Criteria for discharge"
+          name="discharge.criteria"
+          component={TextField}
+      />
+  </>
+);
+
+const OccupationalHealthcareEntryValues = () => (
+  <>
+    <Field 
+      label="Employer Name"
+      placeHolder="Employer name"
+      name="employerName"
+      component={TextField}
+    />
+    <Field 
+      label="Sick leave start"
+      placeholder="YYYY-MM-DD"
+      name="sickLeave.startDate"
+      component={TextField}
+    />
+
+    <Field 
+      label="Sick leave end"
+      placeholder="YYYY-MM-DD"
+      name="sickLeave.endDate"
+      component={TextField}
+    />
+  </>
+);
+
+const setInitialValues = (type: Entry["type"]) => {
+  switch (type) {
+    case "Hospital":
+      return{
+        type: "Hospital",
+        discharge: {
+          date: "",
+          criteria: ""
+        }
+      };
+    case "OccupationalHealthcare":
+      return {
+        type: "OccupationalHealthcare",
+        employerName: "",
+        sickLeave: {
+          startDate: "",
+          endDate: ""
+        }
+      };
+    case "HealthCheck":
+      return {
+        type: "HealthCheck",
+        healthCheckRating: 0
+      };
+    default:
+      break;
+  }
+};
+
+export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel, type }) => {
   const [{ diagnoses } ] = useStateValue();
 
   return (
     <Formik
       initialValues={{
-        type: "Hospital",
         description: "",
         specialist: "",
         date: "",
-        diagnosisCodes: [],
-        discharge: {date: "", criteria: ""},
+        diagnosisCodes: [""],
+        ...setInitialValues(type)
       }}
       onSubmit={onSubmit}
       validate={values => {
@@ -73,6 +143,9 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
               setFieldTouched={setFieldTouched}
               diagnoses={Object.values(diagnoses)}
             />
+            { type === "Hospital" ? <HospitalEntryValues /> : null }
+            { type === "OccupationalHealthcare" ? <OccupationalHealthcareEntryValues /> : null }
+            
             <Grid>
               <Grid.Column floated="left" width={5}>
                 <Button type="button" onClick={onCancel} color="red">
