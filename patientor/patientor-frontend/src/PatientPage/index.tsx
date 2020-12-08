@@ -143,7 +143,7 @@ const PatientPage: React.FC = () => {
       />
       <Button onClick={() => {setType("Hospital"); openModal();} }>Add New Hospital Entry</Button>
       <Button onClick={() => {setType("OccupationalHealthcare"); openModal();} }>Add New Occupational Entry</Button>
-      <Button onClick={() => {setType("HealthCheck"); openModal();} }>NOT WORKING Add New Health Check Entry</Button>
+      <Button onClick={() => {setType("HealthCheck"); openModal();} }>Add New Health Check Entry</Button>
       </div>
     );
   }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
-import AddEntryForm from './AddEntryForm';
+import { AddHospitalEntryForm, AddOccupationalEntryForm, AddHealthCheckEntryForm } from './AddEntryForm';
 import { Entry } from "../types";
 
 interface Props {
@@ -16,7 +16,9 @@ const AddEntryModal = ({ modalOpen, onClose, onSubmit, error, type }: Props) => 
     <Modal.Header>Add a new entry</Modal.Header>
     <Modal.Content>
       {error && <Segment inverted color="red">{`Error: ${error}`}</Segment>}
-      <AddEntryForm onSubmit={onSubmit} onCancel={onClose} type={type}/>
+      {type === "Hospital" ? <AddHospitalEntryForm onSubmit={onSubmit} onCancel={onClose} type={type}/> : null}
+      {type === "OccupationalHealthcare" ? <AddOccupationalEntryForm onSubmit={onSubmit} onCancel={onClose} type={type}/> : null}
+      {type === "HealthCheck" ? <AddHealthCheckEntryForm onSubmit={onSubmit} onCancel={onClose} type={type}/> : null}
     </Modal.Content>
   </Modal>
 );
